@@ -1,0 +1,61 @@
+{% extends 'products/base.html' %} 
+
+{% block title %}Каталог товаров | ONLY BRAND{% endblock %}
+
+{% block content %}
+<div class="row">
+    
+    <!-- ЛЕВАЯ КОЛОНКА: Боковое меню -->
+    <div class="col-md-3 mb-4">
+        <div class="list-group">
+            <a href="{% url 'product_list' %}" class="list-group-item list-group-item-action {% if not category %}active bg-dark border-dark{% endif %}">
+                Все товары
+            </a>
+            {% for c in categories %}
+                {% if c.slug %}
+                    <a href="{% url 'product_list_by_category' category_slug=c.slug %}" 
+                       class="list-group-item list-group-item-action {% if category == c %}active bg-dark border-dark{% endif %}">
+                        {{ c.name }}
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- ПРАВАЯ КОЛОНКА: Сетка товаров -->
+    <div class="col-md-9">
+        <h2 class="mb-4">{% if category %}{{ category.name }}{% else %}Все товары{% endif %}</h2>
+        
+        <div class="row">
+            {% for product in products %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-secondary text-white text-center py-5" style="height: 200px; display: flex; align-items: center; justify-content: center;">
+                                Нет фото
+                            </div>
+                        {% endif %}
+                        
+                        <div class="card-body">
+                            <h6 class="text-muted mb-1">{{ product.brand }}</h6>
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text fw-bold fs-5">{{ product.price }} $</p>
+                        </div>
+                        
+                        <div class="card-footer bg-white border-top-0">
+                            <a href="{% url 'product_detail' pk=product.pk %}" class="btn btn-outline-dark w-100">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <p class="text-muted">В этой категории пока нет товаров.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'products/base.html' %}
+
+{% block title %}{{ product.name }} | ONLY BRAND{% endblock %}
+
+{% block content %}
+<!-- Кнопка возврата в каталог -->
+<div class="mb-4">
+    <a href="javascript:history.back()" class="btn btn-outline-secondary">&larr; Назад</a>
+</div>
+
+<div class="row">
+    <!-- Левая колонка: Фото товара -->
+    <div class="col-md-6 mb-4">
+        {% if product.image %}
+            <img src="{{ product.image.url }}" class="img-fluid rounded shadow-sm" alt="{{ product.name }}">
+        {% else %}
+            <div class="bg-secondary text-white text-center rounded d-flex align-items-center justify-content-center" style="height: 400px;">
+                <span class="fs-4">Нет фото</span>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Правая колонка: Информация о товаре -->
+    <div class="col-md-6">
+        <p class="text-muted mb-1 fs-5">{{ product.brand }}</p>
+        <h1 class="fw-bold mb-3">{{ product.name }}</h1>
+        
+        <h3 class="text-dark fw-bold mb-4">{{ product.price }} $</h3>
+
+        <!-- Проверка остатков -->
+        {% if product.stock > 0 %}
+            <span class="badge bg-success mb-3 fs-6">В наличии: {{ product.stock }} шт.</span>
+        {% else %}
+            <span class="badge bg-danger mb-3 fs-6">Нет в наличии</span>
+        {% endif %}
+
+        <!-- Описание товара -->
+        <div class="mt-4">
+            <h5>Описание:</h5>
+            <p style="white-space: pre-wrap;">{{ product.description|default:"Описание пока не добавлено." }}</p>
+        </div>
+
+        <!-- Кнопка корзины (пока просто визуальная заглушка) -->
+        <div class="mt-5">
+            <button class="btn btn-dark btn-lg w-100" {% if product.stock == 0 %}disabled{% endif %}>
+                Добавить в корзину
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
